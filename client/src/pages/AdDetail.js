@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { MapPin, Clock, Phone, Mail, Heart, Share2, Eye } from 'lucide-react';
+import { MapPin, Clock, Phone, Mail, Heart, Share2, Eye, MessageCircle } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { useAd } from '../contexts/AdContext';
 import AdCard from '../components/Ads/AdCard';
+import ChatModal from '../components/Messaging/ChatModal';
 
 const AdDetail = () => {
   const { adId } = useParams();
@@ -13,6 +14,7 @@ const AdDetail = () => {
   const { toggleSaveAd, savedAds } = useAd();
   const [selectedImage, setSelectedImage] = useState(0);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
   const [contactMessage, setContactMessage] = useState('');
 
   const { data: ad, isLoading } = useQuery(
@@ -302,6 +304,16 @@ const AdDetail = () => {
                     </button>
                   )}
 
+                  {isAuthenticated && user._id !== ad.seller._id && (
+                    <button
+                      onClick={() => setShowChatModal(true)}
+                      className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+                    >
+                      <MessageCircle size={16} />
+                      <span>Chat with Seller</span>
+                    </button>
+                  )}
+
                   <button
                     onClick={() => setShowContactModal(true)}
                     className="w-full flex items-center justify-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg transition-colors"
@@ -368,6 +380,16 @@ const AdDetail = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Chat Modal */}
+      {showChatModal && isAuthenticated && (
+        <ChatModal
+          isOpen={showChatModal}
+          onClose={() => setShowChatModal(false)}
+          ad={ad}
+          seller={ad.seller}
+        />
       )}
     </div>
   );

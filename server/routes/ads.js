@@ -100,7 +100,7 @@ router.get('/', async (req, res) => {
     if (req.query.condition) filters.condition = req.query.condition;
     if (req.query.brand) filters.brand = new RegExp(req.query.brand, 'i');
 
-    filters.isApproved = true;
+    filters.status = 'approved';
     filters.isActive = true;
 
     const ads = await Ad.find(filters)
@@ -158,7 +158,7 @@ router.get('/search', async (req, res) => {
     if (condition) filters.condition = condition;
     if (brand) filters.brand = new RegExp(brand, 'i');
 
-    filters.isApproved = true;
+    filters.status = 'approved';
     filters.isActive = true;
 
     let query = Ad.find(filters);
@@ -197,7 +197,7 @@ router.get('/category/:category', async (req, res) => {
     const limit = parseInt(req.query.limit) || 12;
     const skip = (page - 1) * limit;
 
-    const filters = { category, isApproved: true, isActive: true };
+    const filters = { category, status: 'approved', isActive: true };
     
     // Apply additional filters
     if (req.query.location) filters.location = new RegExp(req.query.location, 'i');
@@ -356,7 +356,7 @@ router.post('/:id/save', auth, async (req, res) => {
 // @access  Private
 router.get('/saved', auth, async (req, res) => {
   try {
-    const ads = await Ad.find({ savedBy: req.user.id, isApproved: true, isActive: true })
+    const ads = await Ad.find({ savedBy: req.user.id, status: 'approved', isActive: true })
       .populate('seller', 'name location')
       .sort({ createdAt: -1 });
 

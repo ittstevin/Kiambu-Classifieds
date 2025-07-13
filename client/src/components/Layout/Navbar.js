@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Search, MapPin, Menu, X, User, Heart, Plus, LogOut, FileText, AlertTriangle } from 'lucide-react';
+import { Search, MapPin, Menu, X, User, Heart, Plus, LogOut, FileText, AlertTriangle, MessageCircle } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -253,14 +253,22 @@ const Navbar = () => {
                     <FileText size={16} />
                     <span>My Ads</span>
                   </Link>
-                  <Link
-                    to="/saved-ads"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                  >
-                    <Heart size={16} />
-                    <span>Saved Ads</span>
-                  </Link>
+                                        <Link
+                        to="/saved-ads"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                      >
+                        <Heart size={16} />
+                        <span>Saved Ads</span>
+                      </Link>
+                      <Link
+                        to="/messages"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                      >
+                        <MessageCircle size={16} />
+                        <span>Messages</span>
+                      </Link>
                   {user?.role === 'admin' && (
                     <Link
                       to="/admin"

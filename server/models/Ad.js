@@ -93,6 +93,11 @@ const adSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
   isApproved: {
     type: Boolean,
     default: false
@@ -100,6 +105,24 @@ const adSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true
+  },
+  approvedAt: {
+    type: Date
+  },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  rejectedAt: {
+    type: Date
+  },
+  rejectedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  rejectionReason: {
+    type: String,
+    trim: true
   },
   views: {
     type: Number,
