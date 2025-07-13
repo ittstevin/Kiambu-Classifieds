@@ -1,232 +1,314 @@
-# Kiambu Classifieds
+# 🏠 Kiambu Classifieds
 
-A fully functional online classifieds website replicating Jiji.co.ke's interface and functionality, built with React, Node.js, and MongoDB.
+A modern, responsive online classifieds platform built with React, Node.js, and MongoDB. Replicating the user interface and core functionality of jiji.co.ke with advanced features for the Kiambu County community.
 
-## 🚀 Features
+![Kiambu Classifieds](https://img.shields.io/badge/React-18.2.0-blue)
+![Node.js](https://img.shields.io/badge/Node.js-18.0.0-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.0.0-green)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3.0-blue)
 
-### Core Functionality
-- **User Authentication**: Register, login, and profile management
-- **Ad Management**: Create, edit, delete, and view advertisements
-- **Search & Filter**: Advanced search with location, price, category filters
-- **Image Upload**: Multiple image upload with preview
-- **Save Ads**: Users can save favorite ads
-- **Contact Sellers**: Direct messaging system
-- **Responsive Design**: Mobile-first approach
+## ✨ Features
 
-### UI/UX Features
-- **Sticky Navigation**: With search bar and location dropdown
-- **Hero Section**: Prominent search and category shortcuts
-- **Ad Cards**: Clean, informative ad display
-- **Image Gallery**: Slider for ad images
-- **Filter Sidebar**: Advanced filtering options
-- **Pagination**: Smooth browsing experience
-- **Modern Design**: Tailwind CSS styling
+### 🎯 Core Features
+- **Responsive Design** - Mobile-first design matching Jiji.co.ke layout
+- **User Authentication** - JWT-based login/signup with Google OAuth
+- **Ad Management** - Post, edit, and manage advertisements with drafts
+- **Image Upload** - Multiple image upload with preview and optimization
+- **Search & Filters** - Advanced search with real-time suggestions
+- **Messaging System** - Real-time chat between buyers and sellers
+- **Admin Dashboard** - Comprehensive moderation and analytics panel
+
+### 🚀 Advanced Features
+
+#### 🔐 Authentication & Security
+- **JWT Authentication** - Secure token-based authentication
+- **Google OAuth** - One-click login with Google accounts
+- **Password Reset** - Email-based password recovery
+- **Protected Routes** - Role-based access control
+- **Session Management** - Automatic token refresh
+
+#### 📝 Ad Management
+- **Auto-save Drafts** - Automatic saving every 30 seconds
+- **Image Preview** - Drag-and-drop image upload with preview
+- **SEO Optimization** - Automatic slug generation and meta tags
+- **Ad Approval Flow** - Admin moderation before publication
+- **Status Management** - Draft, pending, active, sold states
+
+#### 🔍 Smart Search
+- **Real-time Suggestions** - Search suggestions as you type
+- **Advanced Filters** - Price range, location, condition, category
+- **Search History** - Personalized search history
+- **Trending Searches** - Popular search terms
+- **Smart Sorting** - Relevance, price, date sorting
+
+#### 💬 Messaging & Communication
+- **Real-time Chat** - Socket.IO powered instant messaging
+- **WhatsApp Integration** - Direct WhatsApp contact buttons
+- **Message Notifications** - Real-time message alerts
+- **Conversation Management** - Organized chat threads
+
+#### 👤 User Profiles
+- **Seller Profiles** - Detailed seller information with badges
+- **Rating System** - User reviews and ratings
+- **Trust Badges** - Verified, trusted, active seller badges
+- **Response Metrics** - Response rate and time tracking
+
+#### 🎨 UI/UX Enhancements
+- **Dark Mode** - Complete dark theme with smooth transitions
+- **Responsive Design** - Perfect mobile experience like Jiji.co.ke
+- **Toast Notifications** - Beautiful success/error notifications
+- **Loading States** - Skeleton loaders and progress indicators
+- **Smooth Animations** - CSS transitions and micro-interactions
+
+#### 🛠️ Admin Features
+- **Dashboard Analytics** - Sales metrics, user statistics
+- **Ad Moderation** - Approve/reject ads with comments
+- **User Management** - View and manage user accounts
+- **Category Management** - Add/edit categories and subcategories
+- **System Monitoring** - Performance and error tracking
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 18** - UI framework
-- **React Router** - Navigation
-- **Tailwind CSS** - Styling
-- **React Query** - Data fetching
-- **React Hot Toast** - Notifications
-- **Lucide React** - Icons
-- **React Image Gallery** - Image sliders
+- **React 18** - Modern React with hooks
+- **React Router** - Client-side routing
+- **React Query** - Server state management
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide React** - Beautiful icons
+- **React Hot Toast** - Toast notifications
+- **Socket.IO Client** - Real-time communication
 
 ### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **MongoDB** - Database
-- **Mongoose** - ODM
-- **JWT** - Authentication
-- **Multer** - File uploads
-- **bcryptjs** - Password hashing
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web application framework
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB object modeling
+- **JWT** - JSON Web Tokens for authentication
+- **Multer** - File upload handling
+- **Socket.IO** - Real-time bidirectional communication
+- **Bcrypt** - Password hashing
+- **Cors** - Cross-origin resource sharing
 
-## 📦 Installation
+### Development Tools
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Nodemon** - Development server
+- **Concurrently** - Run multiple commands
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (local or cloud)
-- npm or yarn
+- Node.js 18+ 
+- MongoDB 6.0+
+- Git
 
-### Setup Instructions
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd kiambu-classifieds
+   git clone https://github.com/yourusername/Kiambu-Classifieds.git
+   cd Kiambu-Classifieds
    ```
 
 2. **Install dependencies**
    ```bash
    # Install backend dependencies
    npm install
-
+   
    # Install frontend dependencies
    cd client
    npm install
-   cd ..
    ```
 
 3. **Environment Setup**
-   Create a `.env` file in the root directory:
+   ```bash
+   # Create .env file in root directory
+   cp .env.example .env
+   ```
+   
+   Update `.env` with your configuration:
    ```env
    MONGODB_URI=mongodb://localhost:27017/kiambu-classifieds
-   JWT_SECRET=your-secret-key-here
+   JWT_SECRET=your-super-secret-jwt-key
    PORT=5000
-   NODE_ENV=development
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
    ```
 
-4. **Create uploads directory**
+4. **Start MongoDB**
    ```bash
-   mkdir server/uploads
+   # Start MongoDB service
+   mongod
    ```
 
-5. **Start the development servers**
+5. **Run the application**
    ```bash
-   # Start both frontend and backend
-   npm run dev
-
-   # Or start them separately:
-   # Backend only
+   # Start backend server
    npm run server
-
-   # Frontend only
-   cd client && npm start
+   
+   # Start frontend (in new terminal)
+   cd client
+   npm start
    ```
 
-## 🏃‍♂️ Running the Application
+6. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000
 
-### Development Mode
-```bash
-npm run dev
-```
-This will start:
-- Backend server on `http://localhost:5000`
-- Frontend development server on `http://localhost:3000`
+## 📱 Features in Detail
 
-### Production Build
-```bash
-# Build the frontend
-cd client && npm run build
+### 🔐 Authentication System
+- **JWT Tokens**: Secure authentication with automatic refresh
+- **Google OAuth**: One-click login integration
+- **Password Reset**: Email-based recovery system
+- **Session Persistence**: Remember user login state
 
-# Start production server
-npm start
-```
+### 📝 Advanced Ad Form
+- **Auto-save**: Automatic draft saving every 30 seconds
+- **Image Upload**: Drag-and-drop with preview
+- **Form Validation**: Real-time validation with error messages
+- **SEO Fields**: Automatic slug generation and meta descriptions
+- **Condition Selection**: New, used, refurbished options
+- **Location Picker**: Kiambu County specific locations
 
-## 📁 Project Structure
+### 🔍 Smart Search System
+- **Real-time Suggestions**: Search suggestions as you type
+- **Advanced Filters**: Multiple filter combinations
+- **Search History**: Personalized search tracking
+- **Trending Searches**: Popular search terms
+- **Smart Sorting**: Multiple sort options
 
-```
-kiambu-classifieds/
-├── client/                 # React frontend
-│   ├── public/            # Static files
-│   ├── src/
-│   │   ├── components/    # Reusable components
-│   │   ├── contexts/      # React contexts
-│   │   ├── pages/         # Page components
-│   │   └── index.js       # App entry point
-│   └── package.json
-├── server/                # Node.js backend
-│   ├── models/           # MongoDB models
-│   ├── routes/           # API routes
-│   ├── middleware/       # Custom middleware
-│   ├── uploads/          # Image uploads
-│   └── index.js          # Server entry point
-├── package.json
-└── README.md
-```
+### 💬 Real-time Messaging
+- **Socket.IO Integration**: Instant message delivery
+- **Chat Interface**: Modern chat UI with emojis
+- **Message Status**: Read/unread indicators
+- **File Sharing**: Image sharing in chat
+- **Conversation Management**: Organized chat threads
 
-## 🔧 API Endpoints
+### 👤 Enhanced User Profiles
+- **Seller Badges**: Verified, trusted, active seller indicators
+- **Rating System**: 5-star rating with reviews
+- **Response Metrics**: Response rate and time tracking
+- **Profile Analytics**: Ad performance statistics
+- **Contact Options**: Phone, email, WhatsApp integration
+
+### 🎨 Dark Mode
+- **Theme Toggle**: Smooth light/dark mode switching
+- **Persistent Preference**: Remembers user theme choice
+- **System Preference**: Respects OS theme setting
+- **Smooth Transitions**: Beautiful theme switching animations
+
+### 📊 Admin Dashboard
+- **Analytics Overview**: Sales, users, ads statistics
+- **Ad Moderation**: Approve/reject ads with comments
+- **User Management**: View and manage user accounts
+- **Category Management**: Add/edit categories
+- **System Monitoring**: Performance and error tracking
+
+## 🎯 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user
-- `PUT /api/auth/profile` - Update profile
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/google` - Google OAuth
+- `POST /api/auth/forgot-password` - Password reset request
+- `POST /api/auth/reset-password` - Password reset
 
 ### Ads
-- `GET /api/ads` - Get all ads with pagination
+- `GET /api/ads` - Get all ads with filters
 - `POST /api/ads` - Create new ad
 - `GET /api/ads/:id` - Get specific ad
 - `PUT /api/ads/:id` - Update ad
 - `DELETE /api/ads/:id` - Delete ad
-- `GET /api/ads/search` - Search ads
-- `GET /api/ads/featured` - Get featured ads
-- `POST /api/ads/:id/save` - Save/unsave ad
-- `GET /api/ads/saved` - Get saved ads
+- `GET /api/ads/suggestions` - Search suggestions
+- `GET /api/ads/trending-searches` - Trending searches
 
-## 🎨 Key Components
+### Users
+- `GET /api/users/:id` - Get user profile
+- `PUT /api/users/:id` - Update user profile
+- `GET /api/users/:id/reviews` - Get user reviews
+- `POST /api/users/:id/reviews` - Add user review
 
-### Frontend Components
-- **Navbar**: Sticky navigation with search
-- **AdCard**: Individual ad display component
-- **CategoryCard**: Category shortcut cards
-- **ImageGallery**: Image slider for ads
-- **FilterSidebar**: Advanced filtering options
-- **SearchBar**: Global search functionality
+### Messages
+- `GET /api/messages` - Get user messages
+- `POST /api/messages` - Send message
+- `PUT /api/messages/:id/read` - Mark as read
 
-### Backend Models
-- **User**: User authentication and profile
-- **Ad**: Advertisement data with relationships
+### Admin
+- `GET /api/admin/dashboard` - Dashboard statistics
+- `GET /api/admin/ads` - Get ads for moderation
+- `PUT /api/admin/ads/:id/approve` - Approve ad
+- `PUT /api/admin/ads/:id/reject` - Reject ad
 
-## 🔒 Security Features
+## 🎨 UI Components
 
-- JWT-based authentication
-- Password hashing with bcrypt
-- Input validation and sanitization
-- Rate limiting
-- File upload restrictions
-- CORS configuration
+### Core Components
+- **Navbar**: Responsive navigation with dark mode
+- **Footer**: Site footer with links
+- **AdCard**: Advertisement display component
+- **AdForm**: Advanced ad creation form
+- **SearchBar**: Smart search with filters
+- **ChatModal**: Real-time messaging interface
 
-## 📱 Responsive Design
+### Auth Components
+- **LoginForm**: User login form
+- **RegisterForm**: User registration form
+- **GoogleLogin**: Google OAuth button
+- **PasswordReset**: Password recovery form
+- **AuthGuard**: Protected route wrapper
 
-The application is fully responsive and works on:
-- Desktop computers
-- Tablets
-- Mobile phones
-- All modern browsers
+### UI Components
+- **DarkModeToggle**: Theme switching component
+- **LoadingSpinner**: Loading indicators
+- **Toast**: Notification system
+- **Modal**: Reusable modal component
+- **ImageUpload**: File upload with preview
 
 ## 🚀 Deployment
 
 ### Frontend (Vercel)
-1. Connect your GitHub repository to Vercel
-2. Set build command: `cd client && npm run build`
-3. Set output directory: `client/build`
+```bash
+# Build the project
+npm run build
 
-### Backend (Railway/Heroku)
-1. Deploy to Railway or Heroku
-2. Set environment variables
-3. Configure MongoDB connection
+# Deploy to Vercel
+vercel --prod
+```
+
+### Backend (Railway/Render)
+```bash
+# Set environment variables
+MONGODB_URI=your-mongodb-atlas-uri
+JWT_SECRET=your-jwt-secret
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Deploy to Railway
+railway up
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📝 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-For support and questions:
-- Create an issue in the repository
-- Contact the development team
-- Check the documentation
+- Inspired by [Jiji.co.ke](https://jiji.co.ke)
+- Built with modern web technologies
+- Designed for the Kiambu County community
 
-## 🎯 Roadmap
+## 📞 Support
 
-- [ ] Real-time messaging
-- [ ] Push notifications
-- [ ] Advanced analytics
-- [ ] Admin dashboard
-- [ ] Payment integration
-- [ ] Mobile app
-- [ ] Social media integration
+For support, email support@kiambuclassifieds.com or create an issue in this repository.
 
 ---
 
-**Built with ❤️ for Kiambu County** 
+**Made with ❤️ for Kiambu County** 

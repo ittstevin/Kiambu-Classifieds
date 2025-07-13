@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Search, MapPin, Menu, X, User, Heart, Plus, LogOut, FileText, AlertTriangle, MessageCircle } from 'lucide-react';
+import DarkModeToggle from '../UI/DarkModeToggle';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -37,7 +38,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky-nav">
+    <nav className="sticky-nav bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -45,23 +46,23 @@ const Navbar = () => {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">K</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Kiambu Classifieds</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">Kiambu Classifieds</span>
           </Link>
 
           {/* Desktop Search Bar */}
           <div className="hidden md:flex flex-1 max-w-2xl mx-8">
             <form onSubmit={handleSearch} className="w-full">
-              <div className="search-bar flex items-center">
+              <div className="search-bar flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">
                 <input
                   type="text"
                   placeholder="What are you looking for?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 px-4 py-2 bg-transparent outline-none"
+                  className="flex-1 px-4 py-2 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 text-gray-500 hover:text-primary-600"
+                  className="px-4 py-2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
                 >
                   <Search size={20} />
                 </button>
@@ -75,7 +76,7 @@ const Navbar = () => {
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 dark:text-white"
               >
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -83,12 +84,13 @@ const Navbar = () => {
                   </option>
                 ))}
               </select>
-              <MapPin className="absolute right-2 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
+              <MapPin className="absolute right-2 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500 pointer-events-none" />
             </div>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
+            <DarkModeToggle />
             {isAuthenticated ? (
               <>
                 <Link
@@ -99,33 +101,39 @@ const Navbar = () => {
                   <span>Post Ad</span>
                 </Link>
                 <div className="relative group">
-                  <button className="flex items-center space-x-1 text-gray-700 hover:text-primary-600">
+                  <button className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
                     <User size={20} />
                     <span>{user?.name}</span>
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     <div className="py-1">
                       <Link
                         to="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Profile
                       </Link>
                       <Link
                         to="/my-ads"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         My Ads
                       </Link>
                       <Link
                         to="/saved-ads"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Saved Ads
                       </Link>
+                      <Link
+                        to="/messages"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Messages
+                      </Link>
                       <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Logout
                       </button>
@@ -149,7 +157,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-primary-600"
+              className="text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -159,17 +167,17 @@ const Navbar = () => {
         {/* Mobile Search Bar */}
         <div className="md:hidden pb-4">
           <form onSubmit={handleSearch}>
-            <div className="search-bar flex items-center">
+            <div className="search-bar flex items-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">
               <input
                 type="text"
                 placeholder="What are you looking for?"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 px-4 py-2 bg-transparent outline-none"
+                className="flex-1 px-4 py-2 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               />
               <button
                 type="submit"
-                className="px-4 py-2 text-gray-500 hover:text-primary-600"
+                className="px-4 py-2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
               >
                 <Search size={20} />
               </button>
@@ -180,18 +188,18 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
           <div className="px-4 py-4 space-y-4">
             {/* Location Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <MapPin className="inline w-4 h-4 mr-1" />
                 Location
               </label>
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               >
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -201,116 +209,76 @@ const Navbar = () => {
               </select>
             </div>
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <Link
-                to="/post-ad"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center space-x-2 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium"
-              >
-                <Plus size={16} />
-                <span>Post Ad</span>
-              </Link>
-              <Link
-                to="/saved-ads"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium"
-              >
-                <Heart size={16} />
-                <span>Saved</span>
-              </Link>
+            {/* Dark Mode Toggle for Mobile */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Dark Mode</span>
+              <DarkModeToggle />
             </div>
-            
-            {/* User Menu */}
-            {isAuthenticated ? (
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-600 font-semibold">
-                      {user?.name?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{user?.name}</p>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-1">
+
+            {/* Navigation Links */}
+            <div className="space-y-2">
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/post-ad"
+                    className="block w-full text-left px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    <Plus className="inline w-4 h-4 mr-2" />
+                    Post Ad
+                  </Link>
                   <Link
                     to="/profile"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                   >
-                    <User size={16} />
-                    <span>Profile</span>
+                    <User className="inline w-4 h-4 mr-2" />
+                    Profile
                   </Link>
                   <Link
                     to="/my-ads"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                   >
-                    <FileText size={16} />
-                    <span>My Ads</span>
+                    <FileText className="inline w-4 h-4 mr-2" />
+                    My Ads
                   </Link>
-                                        <Link
-                        to="/saved-ads"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                      >
-                        <Heart size={16} />
-                        <span>Saved Ads</span>
-                      </Link>
-                      <Link
-                        to="/messages"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-                      >
-                        <MessageCircle size={16} />
-                        <span>Messages</span>
-                      </Link>
-                  {user?.role === 'admin' && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center space-x-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-                    >
-                      <AlertTriangle size={16} />
-                      <span>Admin Dashboard</span>
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg w-full text-left"
+                  <Link
+                    to="/saved-ads"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                   >
-                    <LogOut size={16} />
-                    <span>Logout</span>
+                    <Heart className="inline w-4 h-4 mr-2" />
+                    Saved Ads
+                  </Link>
+                  <Link
+                    to="/messages"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  >
+                    <MessageCircle className="inline w-4 h-4 mr-2" />
+                    Messages
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  >
+                    <LogOut className="inline w-4 h-4 mr-2" />
+                    Logout
                   </button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium"
-                >
-                  <User size={16} />
-                  <span>Login</span>
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center space-x-2 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium"
-                >
-                  <Plus size={16} />
-                  <span>Register</span>
-                </Link>
-              </div>
-            )}
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
