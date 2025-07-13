@@ -21,6 +21,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import SellerProfile from './components/Profile/SellerProfile';
 import NotFound from './pages/NotFound';
 import './index.css';
+import Chatbot from './components/Chatbot/Chatbot';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,6 +58,7 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
+              <Chatbot />
               <Footer />
               <Toaster
                 position="top-right"
