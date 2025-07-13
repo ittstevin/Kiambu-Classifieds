@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import MyAds from './pages/MyAds';
 import SavedAds from './pages/SavedAds';
 import SearchResults from './pages/SearchResults';
+import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/my-ads" element={<MyAds />} />
             <Route path="/saved-ads" element={<SavedAds />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

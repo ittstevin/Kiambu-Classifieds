@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Search, MapPin, Menu, X, User, Heart, Plus, LogOut } from 'lucide-react';
+import { Search, MapPin, Menu, X, User, Heart, Plus, LogOut, FileText, AlertTriangle } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -181,15 +181,17 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-4 py-2 space-y-1">
-            <div className="py-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="px-4 py-4 space-y-4">
+            {/* Location Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <MapPin className="inline w-4 h-4 mr-1" />
                 Location
               </label>
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -198,55 +200,108 @@ const Navbar = () => {
                 ))}
               </select>
             </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 gap-3">
+              <Link
+                to="/post-ad"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-center space-x-2 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium"
+              >
+                <Plus size={16} />
+                <span>Post Ad</span>
+              </Link>
+              <Link
+                to="/saved-ads"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium"
+              >
+                <Heart size={16} />
+                <span>Saved</span>
+              </Link>
+            </div>
             
+            {/* User Menu */}
             {isAuthenticated ? (
-              <>
-                <Link
-                  to="/post-ad"
-                  className="block px-4 py-2 text-sm font-medium text-white bg-accent-500 rounded-lg"
-                >
-                  Post Ad
-                </Link>
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/my-ads"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  My Ads
-                </Link>
-                <Link
-                  to="/saved-ads"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Saved Ads
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                >
-                  Logout
-                </button>
-              </>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                    <span className="text-primary-600 font-semibold">
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-sm text-gray-500">{user?.email}</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-1">
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                  >
+                    <User size={16} />
+                    <span>Profile</span>
+                  </Link>
+                  <Link
+                    to="/my-ads"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                  >
+                    <FileText size={16} />
+                    <span>My Ads</span>
+                  </Link>
+                  <Link
+                    to="/saved-ads"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+                  >
+                    <Heart size={16} />
+                    <span>Saved Ads</span>
+                  </Link>
+                  {user?.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center space-x-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
+                    >
+                      <AlertTriangle size={16} />
+                      <span>Admin Dashboard</span>
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg w-full text-left"
+                  >
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
             ) : (
-              <>
+              <div className="space-y-3">
                 <Link
                   to="/login"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium"
                 >
-                  Login
+                  <User size={16} />
+                  <span>Login</span>
                 </Link>
                 <Link
                   to="/register"
-                  className="block px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center space-x-2 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium"
                 >
-                  Register
+                  <Plus size={16} />
+                  <span>Register</span>
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>

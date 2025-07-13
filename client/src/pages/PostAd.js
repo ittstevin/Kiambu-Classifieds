@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useAd } from '../contexts/AdContext';
-import { Upload, X, Plus, Camera } from 'lucide-react';
+import { Upload, X, Plus, Camera, Eye, Trash2 } from 'lucide-react';
 
 const PostAd = () => {
   const { isAuthenticated } = useAuth();
@@ -27,6 +27,8 @@ const PostAd = () => {
 
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const categories = {
     vehicles: ['Cars', 'Motorcycles', 'Commercial Vehicles', 'Auto Parts'],
@@ -442,22 +444,49 @@ const PostAd = () => {
                   <div className="mt-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {images.map((image, index) => (
-                        <div key={index} className="relative">
+                        <div key={index} className="relative group">
                           <img
                             src={image.preview}
                             alt={`Preview ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-lg"
+                            className="w-full h-24 object-cover rounded-lg cursor-pointer"
+                            onClick={() => {
+                              setSelectedImage(image);
+                              setShowImageModal(true);
+                            }}
                           />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(index)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex space-x-1">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImage(image);
+                                  setShowImageModal(true);
+                                }}
+                                className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
+                                title="View"
+                              >
+                                <Eye className="w-4 h-4 text-gray-600" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeImage(index);
+                                }}
+                                className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
+                                title="Remove"
+                              >
+                                <Trash2 className="w-4 h-4 text-red-600" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Click on images to preview • Drag to reorder
+                    </p>
                   </div>
                 )}
               </div>
@@ -539,6 +568,43 @@ const PostAd = () => {
           </form>
         </div>
       </div>
+
+      {/* Image Preview Modal */}
+      {showImageModal && selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold text-gray-900">Image Preview</h3>
+              <button
+                onClick={() => {
+                  setShowImageModal(false);
+                  setSelectedImage(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <div className="p-4">
+              <img
+                src={selectedImage.preview}
+                alt="Preview"
+                className="w-full h-auto max-h-[70vh] object-contain rounded"
+              />
+            </div>
+            <div className="p-4 border-t bg-gray-50">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  File: {selectedImage.file.name}
+                </div>
+                <div className="text-sm text-gray-600">
+                  Size: {(selectedImage.file.size / 1024 / 1024).toFixed(2)} MB
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
