@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { MapPin, Clock, Phone, Mail, Heart, Share2, Eye, MessageCircle } from 'lucide-react';
+import { MapPin, Clock, Phone, Mail, Heart, Share2, Eye, MessageCircle, Shield, Star } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { useAd } from '../contexts/AdContext';
 import AdCard from '../components/Ads/AdCard';
 import ChatModal from '../components/Messaging/ChatModal';
+import WhatsAppButton from '../components/Communication/WhatsAppButton';
+import ReputationSystem from '../components/User/ReputationSystem';
+import LocalDialect from '../components/Local/LocalDialect';
 
 const AdDetail = () => {
   const { adId } = useParams();
@@ -200,11 +203,14 @@ const AdDetail = () => {
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900 mb-2">{ad.title}</h1>
                   <div className="price-tag text-2xl mb-2">{formatPrice(ad.price)}</div>
-                  {ad.isNegotiable && (
-                    <span className="inline-block bg-yellow-100 text-yellow-800 text-sm px-2 py-1 rounded">
-                      Negotiable
-                    </span>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    {ad.isNegotiable && (
+                      <span className="inline-block bg-yellow-100 text-yellow-800 text-sm px-2 py-1 rounded">
+                        Negotiable
+                      </span>
+                    )}
+                    <LocalDialect type="text" context="negotiation" />
+                  </div>
                 </div>
               </div>
 
@@ -263,8 +269,17 @@ const AdDetail = () => {
           <div className="lg:col-span-1">
             {/* Seller Information */}
             <div className="bg-white rounded-lg p-6 mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Seller Information</h3>
-              <div className="space-y-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Seller Information</h3>
+                {ad.seller?.verified && (
+                  <div className="flex items-center space-x-1 text-blue-600">
+                    <Shield className="w-4 h-4" />
+                    <span className="text-sm font-medium">Verified</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="space-y-4">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
                     <span className="text-primary-600 font-semibold">
@@ -277,52 +292,86 @@ const AdDetail = () => {
                   </div>
                 </div>
 
+                {/* Reputation System */}
+                {ad.seller && (
+                  <ReputationSystem 
+                    user={ad.seller} 
+                    variant="compact" 
+                    showDetails={true}
+                  />
+                )}
+
                 <div className="border-t pt-4 space-y-3">
+                  {/* WhatsApp Button */}
+                  {ad.contactPhone && (
+                    <WhatsAppButton
+                      phoneNumber={ad.contactPhone}
+                      adTitle={ad.title}
+                      sellerName={ad.seller?.name}
+                      price={ad.price}
+                      location={ad.location}
+                      variant="primary"
+                    />
+                  )}
+
+                  {/* Call Button */}
                   {ad.contactPhone && (
                     <button
                       onClick={() => window.open(`tel:${ad.contactPhone}`)}
-                      className="w-full flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors"
+                      className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
                     >
                       <Phone size={16} />
                       <span>Call Seller</span>
                     </button>
                   )}
 
-                  {ad.contactPhone && (
-                    <button
-                      onClick={() => {
-                        const message = `Hi! I'm interested in your ad: ${ad.title}`;
-                        const whatsappUrl = `https://wa.me/${ad.contactPhone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
-                        window.open(whatsappUrl, '_blank');
-                      }}
-                      className="w-full flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors"
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                      </svg>
-                      <span>WhatsApp Seller</span>
-                    </button>
-                  )}
-
+                  {/* Chat Button */}
                   {isAuthenticated && user._id !== ad.seller._id && (
                     <button
                       onClick={() => setShowChatModal(true)}
-                      className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+                      className="w-full flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors"
                     >
                       <MessageCircle size={16} />
                       <span>Chat with Seller</span>
                     </button>
                   )}
 
+                  {/* Email Button */}
                   <button
                     onClick={() => setShowContactModal(true)}
-                    className="w-full flex items-center justify-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white py-2 px-4 rounded-lg transition-colors"
+                    className="w-full flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors"
                   >
                     <Mail size={16} />
-                    <span>Message Seller</span>
+                    <span>Email Seller</span>
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6 mb-6 border border-green-200 dark:border-green-800">
+              <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                Trust & Safety
+              </h3>
+              <ul className="text-sm text-green-700 dark:text-green-300 space-y-2">
+                <li className="flex items-center">
+                  <Star className="w-4 h-4 mr-2" />
+                  <span>Verified seller profile</span>
+                </li>
+                <li className="flex items-center">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  <span>Local seller in {ad.location}</span>
+                </li>
+                <li className="flex items-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  <span>Active member since {new Date(ad.seller?.memberSince || Date.now()).getFullYear()}</span>
+                </li>
+                <li className="flex items-center">
+                  <Shield className="w-4 h-4 mr-2" />
+                  <span>Secure messaging system</span>
+                </li>
+              </ul>
             </div>
 
             {/* Safety Tips */}
@@ -333,6 +382,7 @@ const AdDetail = () => {
                 <li>• Inspect the item before buying</li>
                 <li>• Don't share personal information</li>
                 <li>• Be cautious of too-good-to-be-true deals</li>
+                <li>• Use our secure chat system</li>
               </ul>
             </div>
           </div>
@@ -389,6 +439,18 @@ const AdDetail = () => {
           onClose={() => setShowChatModal(false)}
           ad={ad}
           seller={ad.seller}
+        />
+      )}
+
+      {/* Floating WhatsApp Button */}
+      {ad.contactPhone && (
+        <WhatsAppButton
+          phoneNumber={ad.contactPhone}
+          adTitle={ad.title}
+          sellerName={ad.seller?.name}
+          price={ad.price}
+          location={ad.location}
+          variant="floating"
         />
       )}
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
@@ -20,8 +20,8 @@ import Messages from './pages/Messages';
 import AdminDashboard from './pages/AdminDashboard';
 import SellerProfile from './components/Profile/SellerProfile';
 import NotFound from './pages/NotFound';
-import './index.css';
 import Chatbot from './components/Chatbot/Chatbot';
+import './index.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,55 +37,53 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AdsProvider>
-          <Router>
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-              <Navbar />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/post-ad" element={<PostAd />} />
-                  <Route path="/category/:category" element={<Category />} />
-                  <Route path="/ad/:id" element={<AdDetail />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/my-ads" element={<MyAds />} />
-                  <Route path="/saved-ads" element={<SavedAds />} />
-                  <Route path="/search" element={<SearchResults />} />
-                  <Route path="/messages" element={<Messages />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/seller/:sellerId" element={<SellerProfile />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Chatbot />
-              <Footer />
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  duration: 4000,
-                  style: {
-                    background: '#363636',
-                    color: '#fff',
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/post-ad" element={<PostAd />} />
+                <Route path="/category/:category" element={<Category />} />
+                <Route path="/ad/:id" element={<AdDetail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/my-ads" element={<MyAds />} />
+                <Route path="/saved-ads" element={<SavedAds />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/seller/:sellerId" element={<SellerProfile />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Chatbot />
+            <Footer />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                },
+                success: {
+                  duration: 3000,
+                  iconTheme: {
+                    primary: '#10B981',
+                    secondary: '#fff',
                   },
-                  success: {
-                    duration: 3000,
-                    iconTheme: {
-                      primary: '#10B981',
-                      secondary: '#fff',
-                    },
+                },
+                error: {
+                  duration: 5000,
+                  iconTheme: {
+                    primary: '#EF4444',
+                    secondary: '#fff',
                   },
-                  error: {
-                    duration: 5000,
-                    iconTheme: {
-                      primary: '#EF4444',
-                      secondary: '#fff',
-                    },
-                  },
-                }}
-              />
-            </div>
-          </Router>
+                },
+              }}
+            />
+          </div>
         </AdsProvider>
       </AuthProvider>
     </QueryClientProvider>

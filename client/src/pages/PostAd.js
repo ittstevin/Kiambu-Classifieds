@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useAd } from '../contexts/AdContext';
-import { Upload, X, Plus, Camera, Eye, Trash2 } from 'lucide-react';
+import { Upload, X, Plus, Camera, Eye, Trash2, Sparkles, Lightbulb, Video } from 'lucide-react';
+import AISuggestions from '../components/Ads/AISuggestions';
+import VideoUpload from '../components/Ads/VideoUpload';
+import LocalDialect from '../components/Local/LocalDialect';
 
 const PostAd = () => {
   const { isAuthenticated } = useAuth();
@@ -26,9 +29,11 @@ const PostAd = () => {
   });
 
   const [images, setImages] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showAISuggestions, setShowAISuggestions] = useState(false);
 
   const categories = {
     vehicles: ['Cars', 'Motorcycles', 'Commercial Vehicles', 'Auto Parts'],
@@ -78,6 +83,29 @@ const PostAd = () => {
         [name]: ''
       }));
     }
+  };
+
+  // Handle AI suggestion selection
+  const handleAISuggestion = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      title: suggestion
+    }));
+  };
+
+  // Handle AI image upload
+  const handleAIImageUpload = (file) => {
+    // Add the AI-analyzed image to the images array
+    const newImage = {
+      file,
+      preview: URL.createObjectURL(file)
+    };
+    setImages(prev => [...prev, newImage]);
+  };
+
+  // Handle video upload
+  const handleVideoUpload = (file) => {
+    setVideoFile(file);
   };
 
   const handleImageUpload = (e) => {
@@ -170,6 +198,11 @@ const PostAd = () => {
         formDataToSend.append('images', image.file);
       });
 
+      // Add video if uploaded
+      if (videoFile) {
+        formDataToSend.append('video', videoFile);
+      }
+
       const result = await createAd(formDataToSend);
       if (result) {
         navigate('/my-ads');
@@ -213,15 +246,46 @@ const PostAd = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm p-6 md:p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Post Your Ad
-            </h1>
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Post Your Ad
+              </h1>
+              <LocalDialect type="badge" />
+            </div>
             <p className="text-gray-600">
               Create a compelling advertisement to reach potential buyers
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* AI Suggestions Section */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-5 h-5 text-blue-600" />
+                  <span className="font-medium text-blue-900 dark:text-blue-100">
+                    AI-Powered Ad Creation
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAISuggestions(!showAISuggestions)}
+                  className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {showAISuggestions ? 'Hide' : 'Show'} AI Help
+                </button>
+              </div>
+              
+              {showAISuggestions && (
+                <AISuggestions
+                  userInput={formData.title}
+                  category={formData.category}
+                  onSuggestionSelect={handleAISuggestion}
+                  onImageUpload={handleAIImageUpload}
+                />
+              )}
+            </div>
+
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -410,89 +474,104 @@ const PostAd = () => {
               )}
             </div>
 
-            {/* Images */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Images *
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-                <div className="text-center">
-                  <Camera className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="mt-4">
-                    <label htmlFor="image-upload" className="cursor-pointer">
-                      <span className="btn-primary inline-flex items-center">
-                        <Upload className="w-4 h-4 mr-2" />
-                        Upload Images
-                      </span>
-                    </label>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </div>
-                  <p className="mt-2 text-sm text-gray-600">
-                    Upload up to 10 images (max 5MB each)
-                  </p>
-                </div>
-
-                {/* Image Preview */}
-                {images.length > 0 && (
-                  <div className="mt-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {images.map((image, index) => (
-                        <div key={index} className="relative group">
-                          <img
-                            src={image.preview}
-                            alt={`Preview ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-lg cursor-pointer"
-                            onClick={() => {
-                              setSelectedImage(image);
-                              setShowImageModal(true);
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-center justify-center">
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex space-x-1">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedImage(image);
-                                  setShowImageModal(true);
-                                }}
-                                className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
-                                title="View"
-                              >
-                                <Eye className="w-4 h-4 text-gray-600" />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  removeImage(index);
-                                }}
-                                className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
-                                title="Remove"
-                              >
-                                <Trash2 className="w-4 h-4 text-red-600" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+            {/* Media Upload Section */}
+            <div className="space-y-6">
+              {/* Images */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Images *
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                  <div className="text-center">
+                    <Camera className="mx-auto h-12 w-12 text-gray-400" />
+                    <div className="mt-4">
+                      <label htmlFor="image-upload" className="cursor-pointer">
+                        <span className="btn-primary inline-flex items-center">
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload Images
+                        </span>
+                      </label>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">
-                      Click on images to preview • Drag to reorder
+                    <p className="mt-2 text-sm text-gray-600">
+                      Upload up to 10 images (max 5MB each)
                     </p>
                   </div>
+
+                  {/* Image Preview */}
+                  {images.length > 0 && (
+                    <div className="mt-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {images.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={image.preview}
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-24 object-cover rounded-lg cursor-pointer"
+                              onClick={() => {
+                                setSelectedImage(image);
+                                setShowImageModal(true);
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-center justify-center">
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex space-x-1">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedImage(image);
+                                    setShowImageModal(true);
+                                  }}
+                                  className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
+                                  title="View"
+                                >
+                                  <Eye className="w-4 h-4 text-gray-600" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeImage(index);
+                                  }}
+                                  className="p-1 bg-white/80 hover:bg-white rounded transition-colors"
+                                  title="Remove"
+                                >
+                                  <Trash2 className="w-4 h-4 text-red-600" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Click on images to preview • Drag to reorder
+                      </p>
+                    </div>
+                  )}
+                </div>
+                {errors.images && (
+                  <p className="mt-1 text-sm text-red-600">{errors.images}</p>
                 )}
               </div>
-              {errors.images && (
-                <p className="mt-1 text-sm text-red-600">{errors.images}</p>
-              )}
+
+              {/* Video Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Video (Optional)
+                </label>
+                <VideoUpload
+                  onVideoUpload={handleVideoUpload}
+                  maxDuration={30}
+                  maxSize={50}
+                />
+              </div>
             </div>
 
             {/* Contact Information */}
@@ -526,19 +605,24 @@ const PostAd = () => {
               </div>
             </div>
 
-            {/* Negotiable */}
-            <div className="flex items-center">
-              <input
-                id="negotiable"
-                name="isNegotiable"
-                type="checkbox"
-                checked={formData.isNegotiable}
-                onChange={handleChange}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-              />
-              <label htmlFor="negotiable" className="ml-2 block text-sm text-gray-900">
-                Price is negotiable
-              </label>
+            {/* Negotiable with Local Dialect */}
+            <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <div className="flex items-center">
+                <input
+                  id="negotiable"
+                  name="isNegotiable"
+                  type="checkbox"
+                  checked={formData.isNegotiable}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                />
+                <label htmlFor="negotiable" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
+                  Price is negotiable
+                </label>
+              </div>
+              {formData.isNegotiable && (
+                <LocalDialect type="text" context="negotiation" />
+              )}
             </div>
 
             {/* Submit Button */}
